@@ -1,9 +1,9 @@
-# Pirates [![Coverage][codecov-badge]][codecov-link]
+**This is a modified version of sucrase, only used for a Discord client mod.**
+Changes include:
+ - preHook option, bypasses the original js loader which bypasses the call to fs.readFileSync
+   as well as bypasses the passed hook itself
 
 ### Properly hijack require
-
-[codecov-badge]: https://img.shields.io/codecov/c/github/danez/pirates/master.svg?style=flat "codecov"
-[codecov-link]: https://codecov.io/gh/danez/pirates "codecov"
 
 ## Why?
 
@@ -22,16 +22,16 @@ where discussion was finally moved.
 
 ## Installation
 
-    npm install --save pirates
+    npm install --save @astra-mod/pirates
 
 ## Usage
 
 Using pirates is really easy:
 ```javascript
 // my-module/register.js
-const addHook = require('pirates').addHook;
+const addHook = require('@astra-mod/pirates').addHook;
 // Or if you use ES modules
-// import { addHook } from 'pirates';
+// import { addHook } from '@astra-mod/pirates';
 
 function matcher(filename) {
   // Here, you can inspect the filename to determine if it should be hooked or
@@ -61,6 +61,8 @@ otherwise; `exts`, which is an array of extensions to hook, they should begin wi
 `ignoreNodeModules`, if true, any file in a `node_modules` folder wont be hooked (the matcher also wont be called),
 if false, then the matcher will be called for any files in `node_modules` (defaults to true).
 
+As for the custom prehook property, you will get passed a filename, you can then return a pretranspiled version of
+that module as a string.
 
 ## Projects that use Pirates
 

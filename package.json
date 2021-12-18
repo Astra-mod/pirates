@@ -1,5 +1,5 @@
 {
-  "name": "pirates",
+  "name": "@astra-mod/pirates",
   "description": "Properly hijack require",
   "main": "lib/index.js",
   "version": "4.1.0",
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/danez/pirates.git"
+    "url": "https://github.com/Astra-mod/pirate.git"
   },
   "engines": {
     "node": ">= 6"
@@ -50,9 +50,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/danez/pirates/issues"
+    "url": "https://github.com/Astra-mod/pirate/issues"
   },
-  "homepage": "https://github.com/danez/pirates#readme",
+  "homepage": "https://github.com/Astra-mod/pirate#readme",
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
