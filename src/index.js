@@ -49,6 +49,12 @@ function shouldCompile(filename, exts, matcher, ignoreNodeModules) {
  * @param {string} filename
  * @returns {string}
  */
+
+/**
+ * @callback PreHook The prehook. Accepts only the filename and can early return pretranspiled code.
+ * @param {string} filename
+ * @returns {string}
+ */
 /**
  * @callback Matcher A matcher function, will be called with path to a file.
  *
@@ -63,6 +69,7 @@ function shouldCompile(filename, exts, matcher, ignoreNodeModules) {
 /**
  * @typedef {object} Options
  * @property {Matcher|null} [matcher=null] A matcher function, will be called with path to a file.
+ * @property {PreHook|null} [preHook=null] A prehook function, will be called with the filename.
  *
  * Should return truthy if the file should be hooked, falsy otherwise.
  *
@@ -112,6 +119,14 @@ export function addHook(hook, opts = {}) {
       if (!reverted) {
         if (shouldCompile(filename, exts, matcher, ignoreNodeModules)) {
           compile = mod._compile;
+          if (opts.preHook) {
+            const ret = opts.preHook(filename);
+            console.log(`Running prehook on ${filename}`, ret);
+            if (ret) {
+              mod._compile(ret, filename);
+              return;
+            }
+          }
           mod._compile = function _compile(code) {
             // reset the compile immediately as otherwise we end up having the
             // compile function being changed even though this loader might be reverted

@@ -21,6 +21,18 @@ test('basics', (t) => {
   reverts.forEach(call);
 });
 
+test('prehook', (t) => {
+  const reverts = [
+    t.context.addHook((code) => code.replace('@@a', '<a>'), { preHook: (filename) => filename.endsWith('foo.js') ? 'module.exports = "prehook-foo";' : null }),
+    t.context.addHook((code) => code.replace('@@b', '<b>'), { preHook: (filename) => filename.endsWith('bar.js') ? 'module.exports = "prehook-bar";' : null })
+  ];
+
+  assertModule(t, 'basics-foo.js', 'prehook-foo');
+  assertModule(t, 'basics-bar.js', 'prehook-bar');
+
+  reverts.forEach(call);
+});
+
 test('ignore node_modules inactive', (t) => {
   const reverts = [
     t.context.addHook((code) => code.replace('@@a', '<a>'), {

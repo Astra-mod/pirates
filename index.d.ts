@@ -6,6 +6,11 @@
 declare type Hook = (code: string, filename: string) => string;
 
 /**
+ * The prehook. Accepts the filename only.
+ */
+declare type PreHook = (filename: string) => string | null;
+
+/**
  * A matcher function, will be called with path to a file.
  *
  * Should return truthy if the file should be hooked, falsy otherwise.
@@ -70,6 +75,13 @@ interface Options {
    * @default true
    */
   ignoreNodeModules?: boolean;
+
+  /**
+   * A prehook function, will be called with path to a file.
+   *
+   * Can return a string, skipping reading the source file and the hook entirely.
+   */
+  preHook?: PreHook | null;
 }
 
 /**
@@ -79,4 +91,4 @@ interface Options {
  * @returns The `revert` function. Reverts the hook when called.
  */
 export declare function addHook(hook: Hook, opts?: Options): RevertFunction;
-export {};
+export { };
