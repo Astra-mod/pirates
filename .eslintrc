@@ -10,5 +10,5 @@
   "rules": {
     "prettier/prettier": "error"
   },
-  "env": { "node": true }
+  "env": { "node": true, "es6": true }
 }

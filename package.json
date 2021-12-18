@@ -8,7 +8,7 @@
     "build": "babel src -d lib",
     "test": "cross-env BABEL_ENV=test yarn run build && nyc ava",
     "lint": "eslint --report-unused-disable-directives .",
-    "prepublishOnly": "yarn run build"
+    "prepare-publish": "node scripts/preparePublish.js"
   },
   "files": [
     "lib",
