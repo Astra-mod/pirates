@@ -1,4 +1,4 @@
-**This is a modified version of sucrase, only used for a Discord client mod.**
+**This is a modified version of pirates, only used for a Discord client mod.**  
 Changes include:
  - preHook option, bypasses the original js loader which bypasses the call to fs.readFileSync
    as well as bypasses the passed hook itself
