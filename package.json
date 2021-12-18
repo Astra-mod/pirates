@@ -2,6 +2,7 @@
   "name": "pirates",
   "description": "Properly hijack require",
   "main": "lib/index.js",
+  "version": "4.1.0",
   "types": "index.d.ts",
   "scripts": {
     "clean": "rimraf lib",
