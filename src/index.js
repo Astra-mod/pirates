@@ -47,6 +47,7 @@ function shouldCompile(filename, exts, matcher, ignoreNodeModules) {
  * @callback Hook The hook. Accepts the code of the module and the filename.
  * @param {string} code
  * @param {string} filename
+ * @param {boolean} preHookFailed
  * @returns {string}
  */
 
@@ -119,12 +120,18 @@ export function addHook(hook, opts = {}) {
       if (!reverted) {
         if (shouldCompile(filename, exts, matcher, ignoreNodeModules)) {
           compile = mod._compile;
+          let preHookFailed = false;
           if (opts.preHook) {
-            const ret = opts.preHook(filename);
-            console.log(`Running prehook on ${filename}`, ret);
-            if (ret) {
-              mod._compile(ret, filename);
-              return;
+            try {
+              const ret = opts.preHook(filename);
+              if (ret) {
+                mod._compile(ret, filename);
+                return;
+              }
+            } catch (err) {
+              preHookFailed = true;
+              // eslint-disable-next-line no-console
+              console.error(`[Pirates] Prehook failed for ${filename}`, err);
             }
           }
           mod._compile = function _compile(code) {
@@ -134,7 +141,7 @@ export function addHook(hook, opts = {}) {
             // addHook -> revert -> addHook -> revert -> ...
             // The compile function is also anyway created new when the loader is called a second time.
             mod._compile = compile;
-            const newCode = hook(code, filename);
+            const newCode = hook(code, filename, preHookFailed);
             if (typeof newCode !== 'string') {
               throw new Error(HOOK_RETURNED_NOTHING_ERROR_MESSAGE);
             }

@@ -23,12 +23,51 @@ test('basics', (t) => {
 
 test('prehook', (t) => {
   const reverts = [
-    t.context.addHook((code) => code.replace('@@a', '<a>'), { preHook: (filename) => filename.endsWith('foo.js') ? 'module.exports = "prehook-foo";' : null }),
-    t.context.addHook((code) => code.replace('@@b', '<b>'), { preHook: (filename) => filename.endsWith('bar.js') ? 'module.exports = "prehook-bar";' : null })
+    t.context.addHook((code) => code.replace('@@a', '<a>'), {
+      preHook: (filename) =>
+        filename.endsWith('foo.js') ? 'module.exports = "prehook-foo";' : null,
+    }),
+    t.context.addHook((code) => code.replace('@@b', '<b>'), {
+      preHook: (filename) =>
+        filename.endsWith('bar.js') ? 'module.exports = "prehook-bar";' : null,
+    }),
   ];
 
   assertModule(t, 'basics-foo.js', 'prehook-foo');
   assertModule(t, 'basics-bar.js', 'prehook-bar');
+
+  reverts.forEach(call);
+});
+
+test('prehook error', (t) => {
+  const reverts = [
+    t.context.addHook(
+      (code, _, failed) => code.replace('@@a', failed ? '<e>' : '<b>'),
+      {
+        preHook: () => {
+          throw new Error('Prehook fail');
+        },
+      },
+    ),
+    t.context.addHook(
+      (code, _, failed) => code.replace('@@b', failed ? '<e>' : '<b>'),
+      {
+        preHook: (filename) =>
+          filename.endsWith('bar.js') ? 'non-existing-variable' : null,
+      },
+    ),
+  ];
+
+  // eslint-disable-next-line no-console
+  const olError = console.error;
+  // eslint-disable-next-line no-console
+  console.error = () => {};
+
+  assertModule(t, 'basics-foo.js', 'in basics-foo <e> <b>');
+  assertModule(t, 'basics-bar.js', 'in basics-bar <e> <e>');
+
+  // eslint-disable-next-line no-console
+  console.error = olError;
 
   reverts.forEach(call);
 });

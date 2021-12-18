@@ -3,7 +3,7 @@
 /**
  * The hook. Accepts the code of the module and the filename.
  */
-declare type Hook = (code: string, filename: string) => string;
+declare type Hook = (code: string, filename: string, preHookFailed?: boolean) => string;
 
 /**
  * The prehook. Accepts the filename only.
