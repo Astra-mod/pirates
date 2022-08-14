@@ -25,7 +25,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - node_version: '10'
           - node_version: '12'
           - node_version: '14'
     steps:
