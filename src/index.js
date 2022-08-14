@@ -47,13 +47,15 @@ function shouldCompile(filename, exts, matcher, ignoreNodeModules) {
  * @callback Hook The hook. Accepts the code of the module and the filename.
  * @param {string} code
  * @param {string} filename
- * @param {boolean} preHookFailed
+ * @param {boolean~} preHookFailed
+ * @param {Module~} module
  * @returns {string}
  */
 
 /**
  * @callback PreHook The prehook. Accepts only the filename and can early return pretranspiled code.
  * @param {string} filename
+ * @param {Module~} module
  * @returns {string}
  */
 /**
@@ -123,7 +125,7 @@ export function addHook(hook, opts = {}) {
           let preHookFailed = false;
           if (opts.preHook) {
             try {
-              const ret = opts.preHook(filename);
+              const ret = opts.preHook(filename, mod);
               if (ret) {
                 mod._compile(ret, filename);
                 return;
@@ -141,7 +143,7 @@ export function addHook(hook, opts = {}) {
             // addHook -> revert -> addHook -> revert -> ...
             // The compile function is also anyway created new when the loader is called a second time.
             mod._compile = compile;
-            const newCode = hook(code, filename, preHookFailed);
+            const newCode = hook(code, filename, preHookFailed, mod);
             if (typeof newCode !== 'string') {
               throw new Error(HOOK_RETURNED_NOTHING_ERROR_MESSAGE);
             }
