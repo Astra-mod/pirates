@@ -5,10 +5,16 @@
     "plugin:import/warnings",
     "prettier"
   ],
-  "plugins": ["prettier"],
+  "plugins": [
+    "prettier"
+  ],
   "parser": "babel-eslint",
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "import/no-unresolved": "off"
   },
-  "env": { "node": true, "es6": true }
+  "env": {
+    "node": true,
+    "es6": true
+  }
 }
